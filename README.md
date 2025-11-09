@@ -2,6 +2,8 @@
 
 一个简单易用的Web工具，将AI生成的Markdown内容转换为TXT、Word等格式，方便分享。
 
+🌐 **在线访问**：[https://riverxue.github.io/MdToEvery/](https://riverxue.github.io/MdToEvery/)
+
 ## ✨ 功能特点
 
 - 🔄 **Markdown转TXT**：去除所有Markdown语法，生成纯文本文件
@@ -24,11 +26,19 @@
 1. 将所有文件上传到Web服务器
 2. 通过浏览器访问 `index.html`
 
-### 方法三：部署到GitHub Pages
+### 方法三：GitHub Pages（已部署）
 
-1. 将项目上传到GitHub仓库
-2. 在仓库设置中启用GitHub Pages
-3. 访问生成的网址
+✅ **项目已部署到GitHub Pages**
+
+🌐 **在线访问**：[https://riverxue.github.io/MdToEvery/](https://riverxue.github.io/MdToEvery/)
+
+**部署步骤**：
+1. 访问仓库：https://github.com/RiverXue/MdToEvery
+2. 进入 Settings → Pages
+3. 选择 Source: main branch
+4. 保存后等待1-2分钟即可访问
+
+详细部署说明请查看：[GitHub_Pages部署指南.md](./GitHub_Pages部署指南.md)
 
 ## 📖 使用步骤
 
