@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="AI提示词管理器 - 保存、管理和复用你的AI提示词。完全免费，本地存储，隐私安全。">
+    <meta name="keywords" content="AI提示词管理,prompt管理,chatgpt提示词,ai工具,提示词库">
+    <title>AI提示词管理器 - 管理你的AI提示词库</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="prompt-manager.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI提示词管理器</h1>
+            <p class="subtitle">保存、管理和复用你的AI提示词，提升AI使用效率</p>
+        </header>
+
+        <div class="tool-nav">
+            <a href="index.html">📝 Markdown转换</a>
+            <a href="prompt-manager.html" class="active">💡 提示词管理</a>
+        </div>
+
+        <main class="prompt-manager">
+            <!-- 统计信息 -->
+            <div class="stats" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalPrompts">0</div>
+                    <div class="stat-label">总提示词</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCategories">0</div>
+                    <div class="stat-label">分类数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgRating">0</div>
+                    <div class="stat-label">平均评分</div>
+                </div>
+            </div>
+
+            <!-- 提示词表单 -->
+            <div class="prompt-form" id="promptForm">
+                <div class="prompt-form-header" id="formToggle">
+                    <h2>添加新提示词</h2>
+                    <span class="prompt-form-toggle">▼</span>
+                </div>
+                <div class="prompt-form-content">
+                <form id="addPromptForm">
+                    <div class="form-group">
+                        <label for="promptTitle">标题 *</label>
+                        <input type="text" id="promptTitle" placeholder="例如：代码审查提示词" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="promptCategory">分类 *</label>
+                            <select id="promptCategory" required>
+                                <option value="">选择分类</option>
+                                <option value="工作">工作</option>
+                                <option value="学习">学习</option>
+                                <option value="创作">创作</option>
+                                <option value="代码">代码</option>
+                                <option value="翻译">翻译</option>
+                                <option value="分析">分析</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>评分</label>
+                            <div class="rating" id="ratingContainer">
+                                <span class="rating-star" data-rating="1">⭐</span>
+                                <span class="rating-star" data-rating="2">⭐</span>
+                                <span class="rating-star" data-rating="3">⭐</span>
+                                <span class="rating-star" data-rating="4">⭐</span>
+                                <span class="rating-star" data-rating="5">⭐</span>
+                            </div>
+                            <input type="hidden" id="promptRating" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptContent">提示词内容 *</label>
+                        <textarea id="promptContent" placeholder="在这里输入你的提示词内容..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptTags">标签（输入后按回车或逗号）</label>
+                        <div class="tags-input" id="tagsInput">
+                            <input type="text" class="tag-input" id="tagInput" placeholder="输入标签后按回车">
+                        </div>
+                        <div id="tagsDisplay"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promptDescription">描述（可选）</label>
+                        <textarea id="promptDescription" placeholder="这个提示词的用途和使用场景..." rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span>💾 保存提示词</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetFormBtn">
+                            <span>🔄 重置</span>
+                        </button>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索提示词（标题、内容、标签）...">
+            </div>
+            <div class="filter-section">
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-category="">全部</button>
+                    <button class="filter-btn" data-category="工作">工作</button>
+                    <button class="filter-btn" data-category="学习">学习</button>
+                    <button class="filter-btn" data-category="创作">创作</button>
+                    <button class="filter-btn" data-category="代码">代码</button>
+                    <button class="filter-btn" data-category="翻译">翻译</button>
+                    <button class="filter-btn" data-category="分析">分析</button>
+                    <button class="filter-btn" data-category="其他">其他</button>
+                </div>
+                <div class="import-export-buttons">
+                    <button class="btn btn-secondary" id="importBtn">
+                        <span>📥 导入</span>
+                    </button>
+                    <button class="btn btn-success" id="exportBtn">
+                        <span>📤 导出</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 提示词列表 -->
+            <div class="prompt-list" id="promptList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">💡</div>
+                    <h3>还没有提示词</h3>
+                    <p>添加你的第一个提示词开始使用吧！</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>提示：所有数据保存在本地浏览器，完全隐私安全。支持导入/导出备份。</p>
+        </footer>
+    </div>
+
+    <!-- 编辑模态框 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h2>编辑提示词</h2>
+            <form id="editPromptForm">
+                <input type="hidden" id="editPromptId">
+                <div class="form-group">
+                    <label for="editPromptTitle">标题 *</label>
+                    <input type="text" id="editPromptTitle" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPromptCategory">分类 *</label>
+                        <select id="editPromptCategory" required>
+                            <option value="工作">工作</option>
+                            <option value="学习">学习</option>
+                            <option value="创作">创作</option>
+                            <option value="代码">代码</option>
+                            <option value="翻译">翻译</option>
+                            <option value="分析">分析</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>评分</label>
+                        <div class="rating" id="editRatingContainer">
+                            <span class="rating-star" data-rating="1">⭐</span>
+                            <span class="rating-star" data-rating="2">⭐</span>
+                            <span class="rating-star" data-rating="3">⭐</span>
+                            <span class="rating-star" data-rating="4">⭐</span>
+                            <span class="rating-star" data-rating="5">⭐</span>
+                        </div>
+                        <input type="hidden" id="editPromptRating" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editPromptContent">提示词内容 *</label>
+                    <textarea id="editPromptContent" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editPromptTags">标签</label>
+                    <input type="text" id="editPromptTags" placeholder="用逗号分隔">
+                </div>
+                <div class="form-group">
+                    <label for="editPromptDescription">描述</label>
+                    <textarea id="editPromptDescription" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span>💾 保存</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelEditBtn">
+                        <span>取消</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="prompt-manager.js"></script>
+</body>
+</html>
+

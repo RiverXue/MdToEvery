@@ -6,7 +6,13 @@
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Stars](https://img.shields.io/github/stars/RiverXue/MdToEvery?style=social)
 
-🌐 **在线访问**：[https://riverxue.github.io/MdToEvery/](https://riverxue.github.io/MdToEvery/)
+🌐 **在线访问**：
+- 🇨🇳 **国内用户（推荐）**：[Vercel](https://md-to-every.vercel.app) - 访问速度快，自动部署
+- 🌍 **国际用户**：[GitHub Pages](https://riverxue.github.io/MdToEvery/) - 全球访问
+
+> ⚠️ **重要提示**：Gitee Pages 已于 2024 年 5 月 1 日下线，不再提供服务。
+> 
+> 💡 **替代方案**：中国用户推荐使用 Vercel 部署，访问速度快且自动部署。详细指南请查看：[国内平台部署指南.md](./国内平台部署指南.md)
 
 **关键词**：markdown转word | markdown转txt | chatgpt内容分享 | ai内容转换 | 去除markdown语法
 
@@ -38,19 +44,25 @@
 1. 将所有文件上传到Web服务器
 2. 通过浏览器访问 `index.html`
 
-### 方法三：GitHub Pages（已部署）
+### 方法三：在线访问（已部署）
 
-✅ **项目已部署到GitHub Pages**
+✅ **项目已部署到多个平台**
 
-🌐 **在线访问**：[https://riverxue.github.io/MdToEvery/](https://riverxue.github.io/MdToEvery/)
+🌐 **访问地址**：
+- 🇨🇳 **Vercel**（国内用户推荐）：[https://md-to-every.vercel.app](https://md-to-every.vercel.app)
+  - 国内访问速度快，自动部署
+  - 部署指南：[国内平台部署指南.md](./国内平台部署指南.md)
+- 🌍 **GitHub Pages**（国际用户）：[https://riverxue.github.io/MdToEvery/](https://riverxue.github.io/MdToEvery/)
+  - 全球访问，自动部署
+  - 部署指南：[GitHub_Pages部署指南.md](./GitHub_Pages部署指南.md)
 
-**部署步骤**：
-1. 访问仓库：https://github.com/RiverXue/MdToEvery
-2. 进入 Settings → Pages
-3. 选择 Source: main branch
-4. 保存后等待1-2分钟即可访问
+**快速部署到 Vercel**（推荐）：
+1. 访问：https://vercel.com
+2. 使用 GitHub 账号登录
+3. 导入项目仓库 `RiverXue/MdToEvery`
+4. 点击"Deploy"，等待部署完成
 
-详细部署说明请查看：[GitHub_Pages部署指南.md](./GitHub_Pages部署指南.md)
+详细步骤请查看：[国内平台部署指南.md](./国内平台部署指南.md)
 
 ## 📖 使用步骤
 
@@ -129,10 +141,17 @@ MIT License - 自由使用和修改
 
 如果这个工具对你有帮助，欢迎分享给需要的朋友！
 
-- 🔗 在线地址：https://riverxue.github.io/MdToEvery/
-- ⭐ GitHub：https://github.com/RiverXue/MdToEvery
+- 🔗 **国内用户**：https://md-to-every.vercel.app（Vercel，推荐）
+- 🔗 **国际用户**：https://riverxue.github.io/MdToEvery/（GitHub Pages）
+- ⭐ **GitHub**：https://github.com/RiverXue/MdToEvery
 
 ---
 
-**提示**：如果遇到问题，请确保浏览器支持现代JavaScript特性，并检查网络连接（需要加载CDN资源）。
+**提示**：
+- 如果遇到问题，请确保浏览器支持现代JavaScript特性
+- 项目已优化 CDN 为 `unpkg.com`，国内访问更快更稳定
+- ⚠️ **Gitee Pages 已下线**：请使用 Vercel 或其他替代方案
+- 中国用户推荐使用 Vercel 部署，访问速度快且自动部署
+- 详细部署指南请查看：[国内平台部署指南.md](./国内平台部署指南.md)
+- 问题解决方案请查看：[中国用户访问问题解决方案.md](./中国用户访问问题解决方案.md)
 

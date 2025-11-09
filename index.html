@@ -18,6 +18,11 @@
             <p class="subtitle">将AI生成的Markdown转换为TXT、Word等格式，方便分享</p>
         </header>
 
+        <div class="tool-nav" style="margin-bottom: var(--spacing-lg); padding: var(--spacing-md); background: var(--apple-bg-secondary); border-radius: var(--radius-md); display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+            <a href="index.html" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--apple-blue-light); color: var(--apple-blue); border: 1px solid var(--apple-blue); border-radius: var(--radius-sm); text-decoration: none; font-size: 14px;">📝 Markdown转换</a>
+            <a href="prompt-manager.html" style="padding: var(--spacing-sm) var(--spacing-md); background: var(--apple-bg-primary); border: 1px solid var(--apple-border); border-radius: var(--radius-sm); text-decoration: none; color: var(--apple-text-primary); font-size: 14px; transition: all 0.2s var(--ease-out);">💡 提示词管理</a>
+        </div>
+
         <main>
             <div class="input-section">
                 <div class="section-header">
@@ -79,9 +84,10 @@
     </div>
 
     <!-- 引入必要的库 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <!-- 使用 unpkg.com CDN，国内访问更快更稳定 -->
+    <script src="https://unpkg.com/marked@11.1.1/marked.min.js"></script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
