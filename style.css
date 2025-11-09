@@ -645,70 +645,237 @@ footer {
 /* 响应式设计 - 手机端 */
 @media (max-width: 768px) {
     body {
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm);
         background: var(--apple-bg-tertiary);
+        -webkit-tap-highlight-color: rgba(0, 122, 255, 0.1);
     }
 
     .container {
-        border-radius: var(--radius-xl);
-        box-shadow: var(--apple-shadow-xl);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--apple-shadow-lg);
+        margin: 0;
+        max-width: 100%;
     }
 
     header {
-        padding: var(--spacing-2xl) var(--spacing-lg);
+        padding: var(--spacing-xl) var(--spacing-md);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
 
     header h1 {
-        font-size: 36px;
-        letter-spacing: -0.8px;
+        font-size: 32px;
+        letter-spacing: -0.6px;
+        line-height: 1.2;
+        margin-bottom: var(--spacing-sm);
     }
 
     .subtitle {
-        font-size: 16px;
+        font-size: 15px;
+        line-height: 1.4;
+        padding: 0 var(--spacing-xs);
     }
 
     main {
         grid-template-columns: 1fr;
-        padding: var(--spacing-lg);
-        gap: var(--spacing-xl);
+        padding: var(--spacing-md);
+        gap: var(--spacing-lg);
     }
 
     .section-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         gap: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
     }
 
     .section-header h2 {
-        font-size: 24px;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+        margin: 0;
     }
 
     .action-buttons,
     .format-buttons {
         width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
         gap: var(--spacing-sm);
     }
 
     .btn {
+        min-height: 48px; /* 苹果推荐的最小触摸目标 */
+        font-size: 16px; /* 防止iOS自动缩放 */
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation; /* 优化触摸响应 */
+        user-select: none;
+        -webkit-user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex: 1;
         min-width: 0;
-        font-size: 14px;
-        padding: 11px 20px;
     }
 
-    #markdownInput,
+    .btn:active {
+        transform: scale(0.98);
+        transition: transform 0.1s var(--ease-out);
+    }
+
+    .btn-primary {
+        font-weight: 600;
+    }
+
+    .btn-secondary {
+        font-weight: 500;
+    }
+
+    .btn-success {
+        min-height: 52px;
+        font-size: 17px;
+        font-weight: 600;
+        padding: 16px 24px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #markdownInput {
+        min-height: 280px;
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        font-size: 16px; /* 防止iOS自动缩放 */
+        line-height: 1.6;
+        -webkit-appearance: none;
+        appearance: none;
+        resize: none;
+    }
+
+    #markdownInput:focus {
+        box-shadow: 
+            0 0 0 3px rgba(0, 122, 255, 0.15),
+            inset 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
     .output-container {
-        min-height: 360px;
+        min-height: 280px;
         border-radius: var(--radius-md);
     }
 
     .output-text {
-        min-height: 360px;
+        min-height: 280px;
+        padding: var(--spacing-md);
+        font-size: 16px; /* 防止iOS自动缩放 */
+        line-height: 1.6;
+    }
+
+    .output-preview {
+        padding: var(--spacing-md);
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .output-preview h1 {
+        font-size: 28px;
+        margin-top: 0;
+    }
+
+    .output-preview h2 {
+        font-size: 24px;
+    }
+
+    .output-preview h3 {
+        font-size: 20px;
+    }
+
+    .download-section {
+        margin-top: var(--spacing-md);
     }
 
     footer {
-        padding: var(--spacing-lg);
-        font-size: 13px;
+        padding: var(--spacing-md);
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+
+    footer p {
+        margin: 0;
+        padding: 0 var(--spacing-xs);
+    }
+}
+
+/* 小屏手机优化 (iPhone SE等) */
+@media (max-width: 375px) {
+    body {
+        padding: var(--spacing-xs);
+    }
+
+    header {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    main {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-md);
+    }
+
+    .section-header h2 {
+        font-size: 20px;
+    }
+
+    .action-buttons,
+    .format-buttons {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+
+    .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    #markdownInput,
+    .output-container {
+        min-height: 240px;
+    }
+
+    .output-text {
+        min-height: 240px;
+    }
+}
+
+/* 横屏手机优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    header {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    main {
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+
+    #markdownInput,
+    .output-container {
+        min-height: 200px;
+    }
+
+    .output-text {
+        min-height: 200px;
     }
 }
 

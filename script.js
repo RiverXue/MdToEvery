@@ -339,6 +339,90 @@ convertHtmlBtn.addEventListener('click', () => {
     }
 });
 
+// 兼容移动端的下载函数
+function downloadFile(blob, fileName) {
+    // 检测是否为移动设备
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    // 创建 blob URL
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.style.display = 'none';
+    
+    // iOS Safari 特殊处理
+    if (isIOS) {
+        // iOS 不支持直接下载，在新窗口打开
+        // 对于文本文件，可以尝试复制到剪贴板
+        if (blob.type.includes('text/plain') || blob.type.includes('text/html')) {
+            // 尝试读取内容并复制到剪贴板
+            blob.text().then(text => {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showNotification('✅ 内容已复制到剪贴板，可粘贴到其他应用', 'success');
+                        URL.revokeObjectURL(url);
+                    }).catch(() => {
+                        // 如果复制失败，在新窗口打开
+                        window.open(url, '_blank');
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    });
+                } else {
+                    // 不支持剪贴板，在新窗口打开
+                    window.open(url, '_blank');
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }
+            }).catch(() => {
+                window.open(url, '_blank');
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            });
+            return;
+        } else {
+            // 非文本文件，在新窗口打开
+            window.open(url, '_blank');
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            return;
+        }
+    }
+    
+    // 移动端（非iOS）和桌面端使用链接下载
+    if (isMobile) {
+        // Android 等移动浏览器
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }, 200);
+    } else {
+        // 桌面端优先使用 FileSaver.js
+        try {
+            if (typeof saveAs !== 'undefined') {
+                saveAs(blob, fileName);
+                // FileSaver 会自动处理，但我们还是清理 URL
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            } else {
+                // FileSaver 未加载，使用链接方式
+                document.body.appendChild(link);
+                link.click();
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 200);
+            }
+        } catch (error) {
+            // 如果 FileSaver 失败，回退到链接方式
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, 200);
+        }
+    }
+}
+
 // 下载功能
 downloadBtn.addEventListener('click', () => {
     if (!currentOutput) {
@@ -348,22 +432,44 @@ downloadBtn.addEventListener('click', () => {
 
     try {
         const markdown = markdownInput.value.trim();
-        const fileName = markdown.substring(0, 20).replace(/[^\w\s]/g, '') || 'converted';
+        // 生成更安全的文件名
+        let fileName = markdown.substring(0, 30).replace(/[^\w\s\u4e00-\u9fa5]/g, '').trim() || 'converted';
+        // 移除多余空格
+        fileName = fileName.replace(/\s+/g, '_');
+        
+        let blob;
+        let fileExtension;
         
         if (currentFormat === 'txt') {
-            const blob = new Blob([currentOutput], { type: 'text/plain;charset=utf-8' });
-            saveAs(blob, `${fileName}.txt`);
+            blob = new Blob([currentOutput], { type: 'text/plain;charset=utf-8' });
+            fileExtension = 'txt';
         } else if (currentFormat === 'docx') {
-            saveAs(currentOutput, `${fileName}.docx`);
+            blob = currentOutput; // 已经是 Blob
+            fileExtension = 'docx';
         } else if (currentFormat === 'doc') {
-            saveAs(currentOutput, `${fileName}.doc`);
+            blob = currentOutput; // 已经是 Blob
+            fileExtension = 'doc';
         } else if (currentFormat === 'html') {
-            const blob = new Blob([currentOutput], { type: 'text/html;charset=utf-8' });
-            saveAs(blob, `${fileName}.html`);
+            blob = new Blob([currentOutput], { type: 'text/html;charset=utf-8' });
+            fileExtension = 'html';
+        } else {
+            throw new Error('未知的格式类型');
         }
         
-        showNotification('✅ 文件已下载');
+        const fullFileName = `${fileName}.${fileExtension}`;
+        
+        // iOS 设备会显示特殊提示，其他设备显示下载成功
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (!isIOS || (!blob.type.includes('text/plain') && !blob.type.includes('text/html'))) {
+            // 非iOS或非文本文件，显示下载提示
+            downloadFile(blob, fullFileName);
+            showNotification('✅ 文件已下载');
+        } else {
+            // iOS文本文件，会在downloadFile中显示复制提示
+            downloadFile(blob, fullFileName);
+        }
     } catch (error) {
+        console.error('下载错误:', error);
         showNotification('❌ 下载失败: ' + error.message, 'error');
     }
 });
@@ -388,16 +494,19 @@ function showNotification(message, type = 'success') {
     
     const color = colors[type] || colors.success;
     
+    // 检测是否为移动设备
+    const isMobile = window.innerWidth <= 768;
+    
     notification.style.cssText = `
         position: fixed;
-        top: 32px;
-        right: 32px;
+        top: ${isMobile ? '16px' : '32px'};
+        ${isMobile ? 'left: 16px; right: 16px;' : 'right: 32px;'}
         background: ${color.bg};
         backdrop-filter: blur(40px) saturate(200%);
         -webkit-backdrop-filter: blur(40px) saturate(200%);
         color: ${color.text};
-        padding: 16px 24px;
-        border-radius: 16px;
+        padding: ${isMobile ? '14px 20px' : '16px 24px'};
+        border-radius: ${isMobile ? '14px' : '16px'};
         box-shadow: 
             0 12px 32px rgba(0, 0, 0, 0.2),
             0 4px 12px rgba(0, 0, 0, 0.15),
@@ -406,15 +515,16 @@ function showNotification(message, type = 'success') {
         z-index: 10000;
         animation: slideIn 0.5s cubic-bezier(0.33, 1, 0.68, 1);
         font-weight: 500;
-        font-size: 15px;
+        font-size: ${isMobile ? '15px' : '15px'};
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
         letter-spacing: -0.2px;
         border: 0.5px solid rgba(255, 255, 255, 0.25);
-        max-width: 360px;
+        max-width: ${isMobile ? '100%' : '360px'};
         word-wrap: break-word;
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        touch-action: manipulation;
     `;
     
     document.body.appendChild(notification);
